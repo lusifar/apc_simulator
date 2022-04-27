@@ -32,6 +32,14 @@ router.post('/api/v1/process', async (req, res) => {
       data = defaultStrategy(moisture, mFactor);
     }
 
+    logger.info(`process (${id}) of APC has completed`, {
+      module: 'routers/v1/process',
+      method: '/api/v1/process',
+      tFactor,
+      mFactor,
+      ...data,
+    });
+
     logger.end(handle);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });

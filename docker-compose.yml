@@ -1,0 +1,51 @@
+version: '3'
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo:5.0
+    command: mongod --dbpath /data/db --port 27017
+    networks:
+      - mongodb_nats
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb/data:/data/db
+
+  n1.node:
+    container_name: n1
+    image: synadia/jsm:nightly
+    entrypoint: /nats-server
+    command: --name N1 --cluster_name JSC --js --sd /data --cluster nats://0.0.0.0:4245 --routes nats://n1:4245,nats://n2:4245,nats://n3:4245 -p 4222
+    networks:
+      - mongodb_nats
+    ports:
+      - 4222:4222
+    volumes:
+      - ./jetstream-cluster/n1:/data
+
+  n2.node:
+    container_name: n2
+    image: synadia/jsm:nightly
+    entrypoint: /nats-server
+    command: --name N2 --cluster_name JSC --js --sd /data --cluster nats://0.0.0.0:4245 --routes nats://n1:4245,nats://n2:4245,nats://n3:4245 -p 4222
+    networks:
+      - mongodb_nats
+    ports:
+      - 4223:4222
+    volumes:
+      - ./jetstream-cluster/n2:/data
+
+  n3.node:
+    container_name: n3
+    image: synadia/jsm:nightly
+    entrypoint: /nats-server
+    command: --name N3 --cluster_name JSC --js --sd /data --cluster nats://0.0.0.0:4245 --routes nats://n1:4245,nats://n2:4245,nats://n3:4245 -p 4222
+    networks:
+      - mongodb_nats
+    ports:
+      - 4224:4222
+    volumes:
+      - ./jetstream-cluster/n3:/data
+
+networks:
+  mongodb_nats: {}

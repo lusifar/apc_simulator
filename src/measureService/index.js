@@ -3,8 +3,6 @@ const { domainService } = require('config');
 const axios = require('axios');
 const uuidv4 = require('uuid').v4;
 
-const logger = require('../utilities/logger')('MEASURE_SERVICE');
-
 const types = ['SHARON', 'RIB_EYE'];
 
 const run = async () => {
@@ -20,8 +18,6 @@ const run = async () => {
     };
 
     const { data } = await axios.post(`${domainService.apc.endpoint}/api/v1/process`, payload);
-
-    logger.info(`process(${id}) result of APC`, data);
   }, 10000);
 
   return handler;
