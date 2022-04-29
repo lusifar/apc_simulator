@@ -23,4 +23,4 @@
   - the **thickness factor** and **moisture factor** are stored in the memory cahce on ``global.cache`` of ``./src/index.js``. Is that possible to leverage MongoDB to store and retrieve this data?
   - there are two strategies (sharonStrategy and defaultStrategy) in ``./src/apcService/utilities/strategyUtil.js``, can you extent for more strategies to meet the requirement of more possibilities?
   - there are only two stake types (SHARON and RIB_EYE) in ``./src/measureService/index.js``, can you extend it to support more types of stake for the caculating in **APC** service?
-  - Can you provide the unit test files with over 80% of coverage rate for all the services in this project?
+  - Can you provide the unit test files with over **80%** of coverage rate for all the services in this project?
