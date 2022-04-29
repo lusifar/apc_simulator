@@ -4,6 +4,7 @@
   - run ``npm install`` in terminal to install all dependent packages
   - run ``docker-compose up -d`` in the terminal to start the service of **nats-server** and **mongodb**
   - run ``node src`` in terminal to start up the whole services
+  - run ``npm test`` in terminal to start the unit-testing of whole project
 
 - ## Features
   - measureService
@@ -23,4 +24,7 @@
   - the **thickness factor** and **moisture factor** are stored in the memory cahce on ``global.cache`` of ``./src/index.js``. Is that possible to leverage MongoDB to store and retrieve this data?
   - there are two strategies (sharonStrategy and defaultStrategy) in ``./src/apcService/utilities/strategyUtil.js``, can you extent for more strategies to meet the requirement of more possibilities?
   - there are only two stake types (SHARON and RIB_EYE) in ``./src/measureService/index.js``, can you extend it to support more types of stake for the caculating in **APC** service?
-  - Can you provide the unit test files with over **80%** of coverage rate for all the services in this project?
+  - Can you provide the unit test files for all services in this project?
+
+- ## Reference
+  - jest unit test tutorial (https://www.softwaretestinghelp.com/jest-testing-tutorial)
