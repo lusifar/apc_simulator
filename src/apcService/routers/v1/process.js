@@ -10,8 +10,6 @@ router.post('/api/v1/process', async (req, res) => {
   const { id, type, thickness, moisture } = req.body;
 
   const handle = logger.begin({
-    module: 'routers/v1/process',
-    method: '/api/v1/process',
     id,
     type,
     thickness,
@@ -32,19 +30,11 @@ router.post('/api/v1/process', async (req, res) => {
       data = defaultStrategy(moisture, mFactor);
     }
 
-    logger.info(`process (${id}) of APC has completed`, {
-      module: 'routers/v1/process',
-      method: '/api/v1/process',
-      tFactor,
-      mFactor,
-      ...data,
-    });
-
-    logger.end(handle);
+    logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
   } catch (err) {
-    logger.fail(handle, err.message);
+    logger.fail(handle, { tFactor, mFactor }, err.message);
 
     return res.status(500).send({ ok: false, message: err.message });
   }

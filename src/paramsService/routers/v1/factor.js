@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/api/v1/factor/thickness', async (req, res) => {
   const { factor } = req.body;
 
-  const handle = logger.begin({ module: 'routers/v1/factor', method: '/api/v1/factor/thickness', factor });
+  const handle = logger.begin({ factor });
 
   try {
     if (!global.natsClient) {
@@ -20,13 +20,13 @@ router.post('/api/v1/factor/thickness', async (req, res) => {
       factor,
     });
 
-    logger.end(handle);
+    logger.end(handle, {}, `publish the thickness factor: ${factor}`);
 
     return res.status(200).send({
       ok: true,
     });
   } catch (err) {
-    logger.fail(handle);
+    logger.fail(handle, {}, err.message);
 
     return res.status(500).send({
       ok: false,
@@ -38,7 +38,7 @@ router.post('/api/v1/factor/thickness', async (req, res) => {
 router.post('/api/v1/factor/moisture', async (req, res) => {
   const { factor } = req.body;
 
-  const handle = logger.begin({ module: 'routers/v1/factor', method: '/api/v1/factor/moisture', factor });
+  const handle = logger.begin({ factor });
 
   try {
     if (!global.natsClient) {
@@ -49,13 +49,13 @@ router.post('/api/v1/factor/moisture', async (req, res) => {
       factor,
     });
 
-    logger.end(handle);
+    logger.end(handle), {}, `publish the moisture factor: ${factor}`;
 
     return res.status(200).send({
       ok: true,
     });
   } catch (err) {
-    logger.fail(handle);
+    logger.fail(handle, {}, err.message);
 
     return res.status(500).send({
       ok: false,

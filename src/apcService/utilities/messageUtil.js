@@ -9,11 +9,11 @@ const natsMessageHandler = (message) => {
   if (msgObj.type === 'FACTOR_THICKNESS') {
     global.cache.set('FACTOR_THICKNESS', msgObj.factor);
 
-    logger.info(`set thickness factor as ${msgObj.factor}`, { module: 'messageUtil', method: 'natsMessageHandler' });
+    logger.info(`receive thickness factor: ${msgObj.factor}`);
   } else if (msgObj.type === 'FACTOR_MOISTURE') {
     global.cache.set('FACTOR_MOISTURE', msgObj.factor);
 
-    logger.info(`set moisture factor as ${msgObj.factor}`, { module: 'messageUtil', method: 'natsMessageHandler' });
+    logger.info(`receive moisture factor: ${msgObj.factor}`);
   }
 };
 

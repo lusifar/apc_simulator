@@ -35,31 +35,29 @@ const func = (loggerLabel) => {
     return cacheData;
   };
 
-  logger.begin = (metadata, message = 'begin the process') => {
+  logger.begin = (metadata) => {
     const handle = uuidv4();
     logger.cache.set(handle, { ts: moment(), metadata });
-
-    logger.info(message, { _type: 'begin', ...metadata });
 
     return handle;
   };
 
-  logger.end = (handle, message = 'end the process') => {
+  logger.end = (handle, metadata = {}, message = 'complete the process') => {
     const cacheData = getDelHandleData(handle);
     if (!cacheData) return;
 
     const duration = moment().diff(cacheData.ts);
 
-    logger.info(message, { _type: 'end', _duration: duration, ...cacheData.metadata });
+    logger.info(message, { _duration: duration, ...cacheData.metadata, ...metadata });
   };
 
-  logger.fail = (handle, message = 'the process is faulted') => {
+  logger.fail = (handle, metadata = {}, message = 'the process is faulted') => {
     const cacheData = getDelHandleData(handle);
     if (!cacheData) return;
 
     const duration = moment().diff(cacheData.ts);
 
-    logger.error(message, { _type: 'fail', _duration: duration, ...cacheData.metadata });
+    logger.error(message, { _duration: duration, ...cacheData.metadata, ...metaData });
   };
 
   return logger;
