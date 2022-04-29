@@ -8,7 +8,8 @@ const measureService = require('./measureService');
 const apcService = require('./apcService');
 const paramsService = require('./paramsService');
 
-let loopHandle = null;
+let measureHandle = null;
+let paramsHandle = null;
 
 const initGlobalNATSClient = async () => {
   // instantiate the nats client
@@ -47,8 +48,8 @@ const run = async () => {
 
   // run all services
   await apcService.run();
-  await paramsService.run();
-  loopHandle = await measureService.run();
+  paramsHandle = await paramsService.run();
+  measureHandle = await measureService.run();
 };
 
 run();
@@ -64,8 +65,12 @@ process.on('SIGINT', async () => {
     global.natsClient = null;
   }
 
-  if (loopHandle) {
-    clearInterval(loopHandle);
+  if (paramsHandle) {
+    clearInterval(paramsHandle);
+  }
+
+  if (measureHandle) {
+    clearInterval(measureHandle);
   }
 
   process.exit();
