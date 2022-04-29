@@ -15,9 +15,9 @@
 
 - ## Config Settings
   - the config file is in the path of ``./config/default.js``
-    - change the value of **config.nats.connection** when you want to connect to the external nats-server
-    - **measureService** is cron job which is triggered once with the period of **config.cron.measurePeriod**
-    - **paramsService** is cron job which is triggered once with the period of **config.cron.paramsPeriod** 
+    - change the value of **config.nats.connection** when you want to connect to the external nats-server, the default number is the local nats-server of ``127.0.0.1:4222``
+    - **measureService** is cron job which is triggered once with the period of **config.cron.measurePeriod**, the default number is ``10000ms``
+    - **paramsService** is cron job which is triggered once with the period of **config.cron.paramsPeriod**, the default number is ``15000ms`` 
 
 - ## Bonus
   - the **thickness factor** and **moisture factor** are stored in the memory cahce on ``global.cache`` of ``./src/index.js``. Is that possible to leverage MongoDB to store and retrieve this data?
