@@ -1,22 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aic-simulator
+  name: apc-simulator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aic-simulator
+      app: apc-simulator
   template:
     metadata:
       labels:
-        app: aic-simulator
+        app: apc-simulator
     spec:
       containers:
-        - name: aic-simulator
-          image: asia-east1-docker.pkg.dev/trainer-lab/apc-simulator/apc-simulator
+        - name: apc-simulator
+          image: lusifar/apc-simulator:v2
           ports:
             - containerPort: 3030
           env:
             - name: PORT
               value: '3030'
+            - name: NATS_SERVICE_CONNECTION
+              value: 'nats-server:4222'
