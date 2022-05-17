@@ -1,7 +1,11 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const { nats } = require('config');
 
 const NodeCache = require('node-cache');
 
+const logger = require('./utilities/logger')('INDEX');
 const NATSClient = require('./utilities/natsClient');
 
 const measureService = require('./measureService');
@@ -15,7 +19,11 @@ const initGlobalNATSClient = async () => {
   // instantiate the nats client
   global.natsClient = NATSClient.instance();
 
-  await global.natsClient.connect(nats.name, [nats.connection]);
+  const connection = process.env.NATS_SERVICE_CONNECTION || nats.connection;
+
+  logger.info(`nats-server connection: ${connection}`);
+
+  await global.natsClient.connect(nats.name, [connection]);
 
   // clear stream and consumer by existence
   let stream = await global.natsClient.getStream(nats.stream);

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aic-simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aic-simulator
+  template:
+    metadata:
+      labels:
+        app: aic-simulator
+    spec:
+      containers:
+        - name: aic-simulator
+          image: asia-east1-docker.pkg.dev/trainer-lab/apc-simulator/apc-simulator
+          ports:
+            - containerPort: 3030
+          env:
+            - name: PORT
+              value: '3030'
