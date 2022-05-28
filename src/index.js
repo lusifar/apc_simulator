@@ -7,6 +7,9 @@ const NodeCache = require('node-cache');
 
 const logger = require('./utilities/logger')('INDEX');
 const NATSClient = require('./utilities/natsClient');
+const dbClient = require('./utilities/db');
+
+const { create, get, update } = require('./controllers/factor');
 
 const measureService = require('./measureService');
 const apcService = require('./apcService');
@@ -49,8 +52,25 @@ const initGlobalCache = async () => {
   global.cache.set('FACTOR_MOISTURE', 0.5);
 };
 
+const initDBFactorValue = async (moisture, thickness) => {
+    const data = await get({});
+    
+    if(data){
+      update({}, {"moisture": moisture, "thickness" : thickness });
+      console.log("update");
+    }else{
+      create(thickness, moisture);
+      console.log("create");
+    }
+
+};
+
 const run = async () => {
   // initialize the global resource
+  await dbClient.init();
+
+  await initDBFactorValue(0.5,0.5);
+
   await initGlobalNATSClient();
   await initGlobalCache();
 
@@ -80,6 +100,8 @@ process.on('SIGINT', async () => {
   if (measureHandle) {
     clearInterval(measureHandle);
   }
+
+  await dbClient.deinit();
 
   process.exit();
 });

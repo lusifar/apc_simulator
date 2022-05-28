@@ -2,6 +2,8 @@ const express = require('express');
 
 const { defaultStrategy, sharonStrategy } = require('../../utilities/strategyUtil');
 
+const { get } = require('../../../controllers/factor');
+
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
 const router = express.Router();
@@ -20,8 +22,13 @@ router.post('/api/v1/process', async (req, res) => {
     if (!global.cache) {
       throw new Error('the global cache is not existed');
     }
-    const tFactor = global.cache.get('FACTOR_THICKNESS');
-    const mFactor = global.cache.get('FACTOR_MOISTURE');
+    // const tFactor = global.cache.get('FACTOR_THICKNESS');
+    // const mFactor = global.cache.get('FACTOR_MOISTURE');
+
+    
+    const factor = await get(); 
+    const tFactor = factor.thickness;
+    const mFactor = factor.moisture;
 
     let data = null;
     if (type === 'SHARON') {
