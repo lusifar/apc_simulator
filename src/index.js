@@ -12,6 +12,7 @@ const dbClient = require('./utilities/db');
 const measureService = require('./measureService');
 const apcService = require('./apcService');
 const paramsService = require('./paramsService');
+const { create, get, update } = require('./controllers/params');
 
 let measureHandle = null;
 let paramsHandle = null;
@@ -48,13 +49,15 @@ const initGlobalCache = async () => {
 
   global.cache.set('FACTOR_THICKNESS', 0.5);
   global.cache.set('FACTOR_MOISTURE', 0.5);
+
+  const data = await create(0.5, 0.4);
 };
 
 const run = async () => {
   // initialize the global resource
   await initGlobalNATSClient();
-  await initGlobalCache();
   await dbClient.init();
+  await initGlobalCache();
 
   // run all services
   await apcService.run();
