@@ -14,6 +14,23 @@ const paramsService = require('./paramsService');
 
 let measureHandle = null;
 let paramsHandle = null;
+var parm1;
+var parm2;
+
+
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("admin");
+  dbo.collection("apc").findOne({}, function(err, result) {
+    if (err) throw err;
+    console.log(result);
+    parm1 = result.FACTOR_THICKNESS;
+    parm2 = result.FACTOR_MOISTURE;
+    db.close();
+  });
+});
 
 const initGlobalNATSClient = async () => {
   // instantiate the nats client
@@ -45,8 +62,10 @@ const initGlobalNATSClient = async () => {
 const initGlobalCache = async () => {
   global.cache = new NodeCache();
 
-  global.cache.set('FACTOR_THICKNESS', 0.5);
-  global.cache.set('FACTOR_MOISTURE', 0.5);
+  global.cache.set('FACTOR_THICKNESS', parm1);
+  global.cache.set('FACTOR_MOISTURE', parm2);
+  console.log("FACTOR_THICKNESS = ", parm1);
+  console.log("FACTOR_MOISTURE = ", parm2);
 };
 
 const run = async () => {
