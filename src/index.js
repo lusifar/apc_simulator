@@ -7,6 +7,7 @@ const NodeCache = require('node-cache');
 
 const logger = require('./utilities/logger')('INDEX');
 const NATSClient = require('./utilities/natsClient');
+const dbClient = require('./utilities/db');
 
 const measureService = require('./measureService');
 const apcService = require('./apcService');
@@ -53,6 +54,7 @@ const run = async () => {
   // initialize the global resource
   await initGlobalNATSClient();
   await initGlobalCache();
+  await dbClient.init();
 
   // run all services
   await apcService.run();
@@ -72,6 +74,8 @@ process.on('SIGINT', async () => {
     await global.natsClient.disconnect();
     global.natsClient = null;
   }
+
+  await dbClient.deinit();
 
   if (paramsHandle) {
     clearInterval(paramsHandle);
