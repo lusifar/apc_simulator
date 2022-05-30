@@ -14,6 +14,7 @@ describe('Module messageUtil', () => {
   afterEach( async () => {
     await dbClient.deinit();
   });
+  //
 
   it('Check mongoDB connection', () => {
     const status = dbClient.isConnected();
