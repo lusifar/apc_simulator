@@ -7,10 +7,8 @@ const natsMessageHandler = async (message) => {
   // }
 
   try {
-    //
     const data = await cacheParams.get({});
   } catch (err) {
-    //
     return;
   }
 

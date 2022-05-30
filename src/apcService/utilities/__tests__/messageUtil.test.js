@@ -1,17 +1,44 @@
 const { natsMessageHandler } = require('../messageUtil');
 const cacheParams = require('../../../controllers/params');
+const dbClient = require('../../../utilities/db');
 
 describe('Module messageUtil', () => {
   const fakeType = 'FACTOR_THICKNESS';
-  const fakeFactor = 0.5;
+  const fakeFactor = 0.6;
 
-  beforeEach(() => {
+  beforeEach( async () => {
     jest.clearAllMocks();
+    await dbClient.init();
   });
 
-  it('Fake test', async () => {
-    expect (fakeFactor).toBe(0.5);
+  afterEach( async () => {
+    await dbClient.deinit();
   });
+
+  it('Check mongoDB connection', () => {
+    const status = dbClient.isConnected();
+    expect (status).toBe(1);
+  });
+
+  it('Method natsMessageHandler for success', async () => {
+    // default
+    await cacheParams.create(0.5,0.5);
+    
+    await natsMessageHandler(
+      JSON.stringify({
+        type: fakeType,
+        factor: fakeFactor,
+      })
+    );
+
+    const params = await cacheParams.get({});
+
+    if (fakeType == 'FACTOR_THICKNESS')
+      expect(params.factor_thickness).toBe(fakeFactor);
+    else if (fakeType == 'FACTOR_MOISTURE')
+      expect(params.factor_moisture).toBe(fakeFactor);
+  });
+
 
   // it('Method natsMessageHandler for success', async () => {
   //   global.cache = {
