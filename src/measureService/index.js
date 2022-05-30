@@ -3,7 +3,7 @@ const { cron, domainService } = require('config');
 const axios = require('axios');
 const uuidv4 = require('uuid').v4;
 
-const types = ['SHARON', 'RIB_EYE'];
+const types = ['SHARON', 'RIB_EYE', 'FILET', 'STRIP'];
 
 const run = async () => {
   const handler = setInterval(async () => {
