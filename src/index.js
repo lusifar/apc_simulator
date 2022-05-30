@@ -12,7 +12,7 @@ const dbClient = require('./utilities/db');
 const measureService = require('./measureService');
 const apcService = require('./apcService');
 const paramsService = require('./paramsService');
-const cacheController = require('./controllers/params');
+const cacheParams = require('./controllers/params');
 const { param } = require('./apcService/routers/v1/process');
 
 let measureHandle = null;
@@ -54,7 +54,7 @@ const initGlobalNATSClient = async () => {
 //   const data = await create(0.5, 0.4);
 // };
 const initGlobalCache = async () => {
-  const data = await cacheController.create(0.5, 0.5);
+  const data = await cacheParams.create(0.5, 0.5);
 };
 
 const run = async () => {
@@ -74,7 +74,7 @@ run();
 process.on('SIGINT', async () => {
   // Remove all caches from MongoDB
   if (dbClient.isConnected() == 1) {
-    cacheController.destroy({});
+    cacheParams.destroy({});
   }
 
   if (global.natsClient) {
