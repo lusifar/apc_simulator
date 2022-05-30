@@ -25,7 +25,10 @@ const deinit = async () => {
   }
 };
 
+const isConnected = () => mongoose.connection.readyState;
+
 module.exports = {
   init,
   deinit,
+  isConnected
 };
