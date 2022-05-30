@@ -4,11 +4,11 @@ const { Schema } = mongoose;
 
 paramsSchema = new Schema({
   factor_thickness: {
-    type: Schema.Types.Decimal128,
+    type: Schema.Types.Number,
     required: true,
   },
   factor_moisture: {
-    type: Schema.Types.Decimal128,
+    type: Schema.Types.Number,
     required: true,
   },
 });
