@@ -24,10 +24,18 @@ router.post('/api/v1/process', async (req, res) => {
     const mFactor = global.cache.get('FACTOR_MOISTURE');
 
     let data = null;
-    if (type === 'SHARON') {
-      data = sharonStrategy(thickness, tFactor);
-    } else {
-      data = defaultStrategy(moisture, mFactor);
+    switch (type) {
+      case 'SHARON':
+        data = sharonStrategy(thickness, tFactor);
+        break;
+      case 'FILET':
+        data = defaultStrategy(thickness, tFactor);
+        break;
+      case 'STRIP':
+        data = defaultStrategy(thickness, tFactor);
+        break;
+      default:
+        data = defaultStrategy(moisture, mFactor);
     }
 
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
