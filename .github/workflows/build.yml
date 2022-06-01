@@ -18,6 +18,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: abc225666/CND-project:latest
-
-
+        tags: abc225666/cnd-project:latest
