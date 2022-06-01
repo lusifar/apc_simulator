@@ -56,8 +56,7 @@ const initDBFactorValue = async (moisture, thickness) => {
     const data = await get({});
     
     if(data){
-      update({}, {"moisture": moisture, "thickness" : thickness });
-      console.log("update");
+      console.log("factor exist");
     }else{
       create(thickness, moisture);
       console.log("create");
