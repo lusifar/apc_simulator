@@ -16,7 +16,19 @@ const sharonStrategy = (thickness, tFactor) => {
   };
 };
 
+const stripStrategy = (moisture, mFactor, thickness, tFactor, doneness) => {
+  const temperature = (thickness * tFactor + 100).toFixed(2);
+  const period = (60 + doneness * 30).toFixed(2);
+
+  return {
+    period,
+    temperature,
+  };
+};
+
+
 module.exports = {
   defaultStrategy,
   sharonStrategy,
+  stripStrategy,
 };

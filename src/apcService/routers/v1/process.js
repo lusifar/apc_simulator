@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { defaultStrategy, sharonStrategy } = require('../../utilities/strategyUtil');
+const { defaultStrategy, sharonStrategy, stripStrategy } = require('../../utilities/strategyUtil');
 
 const { get } = require('../../../controllers/factor');
 
@@ -9,13 +9,14 @@ const logger = require('../../../utilities/logger')('APC_SERVICE');
 const router = express.Router();
 
 router.post('/api/v1/process', async (req, res) => {
-  const { id, type, thickness, moisture } = req.body;
+  const { id, type, thickness, moisture, doneness } = req.body;
 
   const handle = logger.begin({
     id,
     type,
     thickness,
     moisture,
+    doneness,
   });
 
   try {
@@ -33,6 +34,8 @@ router.post('/api/v1/process', async (req, res) => {
     let data = null;
     if (type === 'SHARON') {
       data = sharonStrategy(thickness, tFactor);
+    } else if (type == 'STRIP'){
+      data = stripStrategy(moisture, mFactor,thickness, tFactor, doneness );
     } else {
       data = defaultStrategy(moisture, mFactor);
     }
