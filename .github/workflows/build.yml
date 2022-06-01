@@ -1,5 +1,7 @@
 name: Build Image
 
+on: push
+
 jobs:
   docker-build:
     runs-on: self-hosted
