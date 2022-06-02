@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { nats } = require('config');
+const { nats, mongodb } = require('config');
 
 const NodeCache = require('node-cache');
 
@@ -47,11 +47,12 @@ const initGlobalNATSClient = async () => {
 };
 
 const initGlobalCache = async () => {
+
   global.mongoCache = cacheManager.caching({
     store : mongoStore,
-    uri : "mongodb://localhost:27017/admin",
+    uri : mongodb.uri,
     options : {
-      collection : "apc",
+      collection : mongodb.collection,
       compression : false,
       poolSize : 5,
       autoReconnect: true
@@ -61,19 +62,28 @@ const initGlobalCache = async () => {
   let tFactorPromise = global.mongoCache.get('FACTOR_THICKNESS');
   let mFactorPromise = global.mongoCache.get('FACTOR_MOISTURE');
   tFactorPromise.then(function(tFactor) {
-    console.log('*****');
-    console.log(tFactor);
-    global.mongoCache.set('FACTOR_THICKNESS', tFactor, ttl);
+    console.log('tFactor: ', tFactor);
+    if (typeof tFactor  === "number"){
+      console.log('retrieve FACTOR_THICKNESS: ', tFactor);
+      global.mongoCache.set('FACTOR_THICKNESS', tFactor, ttl);
+    }else{
+      console.log('store initial FACTOR_THICKNESS: 0.5');
+      global.mongoCache.set('FACTOR_THICKNESS', 0.5, ttl);
+    }
+    
   });
 
   mFactorPromise.then(function(mFactor) {
-    console.log('*****');
-    console.log(mFactor);
-    global.mongoCache.set('FACTOR_THICKNESS', mFactor, ttl);
+    console.log('mFactor: ', mFactor);
+    if (typeof tFactor  === "number"){
+      console.log('retrieve FACTOR_MOISTURE: ', mFactor);
+      global.mongoCache.set('FACTOR_MOISTURE', mFactor, ttl);
+    }else{
+      console.log('store initial FACTOR_MOISTURE: 0.5');
+      global.mongoCache.set('FACTOR_MOISTURE', 0.5, ttl);
+    }
   });
 
-  // global.mongoCache.set('FACTOR_THICKNESS', 0.5, ttl);
-  // global.mongoCache.set('FACTOR_MOISTURE', 0.5, ttl);
 };
 
 const run = async () => {
