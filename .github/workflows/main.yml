@@ -23,6 +23,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: user/{secrets.CI_REGISTRY}:latest
+          tags: user/{{secrets.CI_REGISTRY}}:latest
       - run: npm ci
       - run: npm test
