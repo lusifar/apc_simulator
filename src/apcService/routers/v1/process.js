@@ -17,11 +17,11 @@ router.post('/api/v1/process', async (req, res) => {
   });
 
   try {
-    if (!global.cache) {
+    if (!global.mongoCache) {
       throw new Error('the global cache is not existed');
     }
-    const tFactor = global.cache.get('FACTOR_THICKNESS');
-    const mFactor = global.cache.get('FACTOR_MOISTURE');
+    const tFactor = global.mongoCache.get('FACTOR_THICKNESS');
+    const mFactor = global.mongoCache.get('FACTOR_MOISTURE');
 
     let data = null;
     if (type === 'SHARON') {
