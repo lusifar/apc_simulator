@@ -8,7 +8,7 @@ describe('Module messageUtil', () => {
     jest.clearAllMocks();
   });
 
-  /*it('Method natsMessageHandler for success', async () => {
+  it('Method natsMessageHandler for success', async () => {
     global.cache = {
       set: jest.fn().mockReturnValueOnce(true),
     };
@@ -21,7 +21,7 @@ describe('Module messageUtil', () => {
     );
 
     expect(global.cache.set).toHaveBeenCalledWith(fakeType, fakeFactor);
-  });*/
+  });
 
   it('Method natsMessageHandler for failed', async () => {
     global.cache = {
