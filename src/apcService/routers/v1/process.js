@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { defaultStrategy, sharonStrategy } = require('../../utilities/strategyUtil');
+const { getData } = require('../../utilities/dataUtil');
 
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
@@ -16,26 +16,26 @@ router.post('/api/v1/process', async (req, res) => {
     moisture,
   });
 
+  let tFactor = null;
+  let mFactor = null;
+
   try {
     if (!global.cache) {
       throw new Error('the global cache is not existed');
     }
-    const tFactor = global.cache.get('FACTOR_THICKNESS');
-    const mFactor = global.cache.get('FACTOR_MOISTURE');
+    tFactor = global.cache.get('FACTOR_THICKNESS');
+    mFactor = global.cache.get('FACTOR_MOISTURE');
 
-    let data = null;
-    switch (type) {
-      case 'SHARON':
-        data = sharonStrategy(thickness, tFactor);
-        break;
-      case 'FILET':
-        data = defaultStrategy(thickness, tFactor);
-        break;
-      case 'STRIP':
-        data = defaultStrategy(thickness, tFactor);
-        break;
-      default:
-        data = defaultStrategy(moisture, mFactor);
+    let data = getData({
+      type, 
+      thickness,
+      moisture,
+      tFactor,
+      mFactor,
+    });
+
+    if (typeof data !== 'number') {
+      throw new Error('the data is invalid')
     }
 
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
