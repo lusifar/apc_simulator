@@ -9,9 +9,9 @@ describe('Module messageUtil', () => {
   });
 
   it('Method natsMessageHandler for success', async () => {
-    global.cache = {
-      set: jest.fn().mockReturnValueOnce(true),
-    };
+    //global.cache = {
+    //  set: jest.fn().mockReturnValueOnce(true),
+    //};
 
     natsMessageHandler(
       JSON.stringify({
