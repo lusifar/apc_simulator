@@ -5,6 +5,10 @@ const { nats } = require('config');
 
 const NodeCache = require('node-cache');
 
+const cacheManager = require('cache-manager');
+const mongoStore = require('cache-manager-mongodb');
+const ttl = 60;
+
 const logger = require('./utilities/logger')('INDEX');
 const NATSClient = require('./utilities/natsClient');
 
@@ -14,23 +18,6 @@ const paramsService = require('./paramsService');
 
 let measureHandle = null;
 let paramsHandle = null;
-var parm1;
-var parm2;
-
-
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  var dbo = db.db("admin");
-  dbo.collection("apc").findOne({}, function(err, result) {
-    if (err) throw err;
-    console.log(result);
-    parm1 = result.FACTOR_THICKNESS;
-    parm2 = result.FACTOR_MOISTURE;
-    db.close();
-  });
-});
 
 const initGlobalNATSClient = async () => {
   // instantiate the nats client
@@ -60,12 +47,33 @@ const initGlobalNATSClient = async () => {
 };
 
 const initGlobalCache = async () => {
-  global.cache = new NodeCache();
+  global.mongoCache = cacheManager.caching({
+    store : mongoStore,
+    uri : "mongodb://localhost:27017/admin",
+    options : {
+      collection : "apc",
+      compression : false,
+      poolSize : 5,
+      autoReconnect: true
+    }
+  });
 
-  global.cache.set('FACTOR_THICKNESS', parm1);
-  global.cache.set('FACTOR_MOISTURE', parm2);
-  console.log("FACTOR_THICKNESS = ", parm1);
-  console.log("FACTOR_MOISTURE = ", parm2);
+  let tFactorPromise = global.mongoCache.get('FACTOR_THICKNESS');
+  let mFactorPromise = global.mongoCache.get('FACTOR_MOISTURE');
+  tFactorPromise.then(function(tFactor) {
+    console.log('*****');
+    console.log(tFactor);
+    global.mongoCache.set('FACTOR_THICKNESS', tFactor, ttl);
+  });
+
+  mFactorPromise.then(function(mFactor) {
+    console.log('*****');
+    console.log(mFactor);
+    global.mongoCache.set('FACTOR_THICKNESS', mFactor, ttl);
+  });
+
+  // global.mongoCache.set('FACTOR_THICKNESS', 0.5, ttl);
+  // global.mongoCache.set('FACTOR_MOISTURE', 0.5, ttl);
 };
 
 const run = async () => {
