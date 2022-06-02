@@ -33,11 +33,7 @@ router.post('/api/v1/process', async (req, res) => {
       tFactor,
       mFactor,
     });
-
-    if (typeof data !== 'number') {
-      throw new Error('the data is invalid')
-    }
-
+    
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
