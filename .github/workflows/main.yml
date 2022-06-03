@@ -26,3 +26,5 @@ jobs:
           tags: ${{ secrets.CI_REGISTRY_USER }}/${{secrets.CI_REGISTRY}}:latest
       - run: npm ci
       - run: npm test
+        env:
+          Test: true
