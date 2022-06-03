@@ -7,13 +7,21 @@ on:
 
 
 jobs:
-  main:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v2
+      - run: npm ci
+      - run: npm test
+        env:
+          Test: true
+
+  push_image:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
@@ -24,7 +32,3 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.CI_REGISTRY_USER }}/${{secrets.CI_REGISTRY}}:latest
-      - run: npm ci
-      - run: npm test
-        env:
-          Test: true
