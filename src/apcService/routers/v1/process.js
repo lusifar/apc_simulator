@@ -6,6 +6,10 @@ const logger = require('../../../utilities/logger')('APC_SERVICE');
 
 const router = express.Router();
 
+//const client = require('prom-client');
+//const gauge = new client.Gauge({ name: 'moisture', help: 'metric_help'});
+const axios = require('axios');
+
 router.post('/api/v1/process', async (req, res) => {
   const { id, type, thickness, moisture } = req.body;
 
@@ -15,6 +19,8 @@ router.post('/api/v1/process', async (req, res) => {
     thickness,
     moisture,
   });
+
+  //gauge.set(parseFloat(moisture));
 
   try {
     if (!global.cache) {
@@ -29,7 +35,16 @@ router.post('/api/v1/process', async (req, res) => {
     } else {
       data = defaultStrategy(moisture, mFactor);
     }
-
+    axios({
+        method: 'get',
+        url: `http://34.72.100.211/completed`,
+        headers: {'tFactor':tFactor,'mFactor':mFactor,'temperature':data['temperature'],'id':id,'type':type}
+     }).then(res => {
+  
+      })
+      .catch(error => {
+        console.error(error);
+      });
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
