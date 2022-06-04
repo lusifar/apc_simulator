@@ -27,6 +27,7 @@
     "moment": "^2.29.3",
     "nats": "^2.6.1",
     "node-cache": "^5.1.2",
+    "prometheus-client-js": "^2.3.6",
     "uuid": "^8.3.2",
     "winston": "^3.7.2"
   }

@@ -1,5 +1,15 @@
 const logger = require('../../utilities/logger')('APC_SERVICE');
 
+// Prometheus
+const client = require('../../../prom-client');
+const counter = new client.Counter({
+  name: 'metric_name',
+  help: 'metric_help',
+});
+counter.inc(); // Increment by 1
+counter.inc(10); // Increment by 10
+
+
 const natsMessageHandler = (message) => {
   if (!global.cache) {
     return;

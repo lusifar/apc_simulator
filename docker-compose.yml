@@ -46,6 +46,27 @@ services:
       - 4224:4222
     volumes:
       - ./jetstream-cluster/n3:/data
+  
+  my-prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      # Map port 9090 inside the container to port 19090 on the host
+      - 19090:9090
+
+  my-grafana:
+    image: grafana/grafana:8.3.6
+    volumes:
+      - ./datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./dashboard-provider.yml:/etc/grafana/provisioning/dashboards/dashboard-provider.yml
+      - ./dashboard-windows-exporter.json:/var/lib/grafana/dashboards/demo/dashboard-windows-exporter.json
+    depends_on:
+      - my-prometheus
+    ports:
+      - 13000:3000
 
 networks:
   mongodb_nats: {}

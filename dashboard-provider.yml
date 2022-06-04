@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+# <string> an unique provider name. Required
+- name: 'Demo Dashboard Provider'
+  folder: Demo
+  type: file
+  allowUiUpdates: false
+  options:
+    # <string, required> path to dashboard files on disk.
+    path: /var/lib/grafana/dashboards/demo
