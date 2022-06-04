@@ -1,8 +1,9 @@
 const express = require('express');
 
-const { defaultStrategy, sharonStrategy, stripStrategy } = require('../../utilities/strategyUtil');
+const {Strategy, defaultStrategy, sharonStrategy, stripStrategy } = require('../../utilities/strategyUtil');
 
 const { get } = require('../../../controllers/factor');
+const { Logform } = require('winston');
 
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
@@ -28,20 +29,33 @@ router.post('/api/v1/process', async (req, res) => {
 
     
     const factor = await get(); 
-    const tFactor = factor.thickness;
-    const mFactor = factor.moisture;
+  
+    var steakParameter = new Map(
+      [["tFactor" , factor.thickness],
+       ["mFactor" , factor.moisture],
+       ["doneness" , doneness],
+       ["moisture" , moisture],
+       ["thickness" , thickness]]
+    ) 
 
     let data = null;
+    var strategy = new Strategy();
     if (type === 'SHARON') {
-      data = sharonStrategy(thickness, tFactor);
+      var sharonmethod = new sharonStrategy();
+      strategy.setStrategy(sharonmethod);
     } else if (type == 'STRIP'){
-      data = stripStrategy(moisture, mFactor,thickness, tFactor, doneness );
+      var stripmethod = new stripStrategy();
+      strategy.setStrategy(stripmethod);
     } else {
-      data = defaultStrategy(moisture, mFactor);
+      var defaultmethod = new defaultStrategy();
+      strategy.setStrategy(defaultmethod);
     }
+    data = strategy.runningStrategy(steakParameter);
 
+    const tFactor = steakParameter.get("tFactor");
+    const mFactor = steakParameter.get("mFactor");
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
-
+    
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
   } catch (err) {
     logger.fail(handle, { tFactor, mFactor }, err.message);
