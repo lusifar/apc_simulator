@@ -1,4 +1,4 @@
-const { defaultStrategy, sharonStrategy } = require('./strategyUtil');
+const { defaultStrategy, sharonStrategy, mixStrategy } = require('./strategyUtil');
 
 const getData = ({ type, thickness, moisture, tFactor, mFactor }) => {
   let data = null;
@@ -12,10 +12,8 @@ const getData = ({ type, thickness, moisture, tFactor, mFactor }) => {
         data = sharonStrategy(thickness, tFactor);
         break;
       case 'FILET':
-        data = defaultStrategy(moisture, mFactor);
-        break;
       case 'STRIP':
-        data = defaultStrategy(moisture, mFactor);
+        data = mixStrategy(moisture, mFactor, thickness, tFactor);
         break;
       default:
         data = defaultStrategy(moisture, mFactor);
