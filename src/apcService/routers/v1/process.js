@@ -39,15 +39,15 @@ router.post('/api/v1/process', async (req, res) => {
     ) 
 
     let data = null;
-    var strategy = new Strategy();
+    const strategy = new Strategy();
     if (type === 'SHARON') {
-      var sharonmethod = new sharonStrategy();
+      const sharonmethod = new sharonStrategy();
       strategy.setStrategy(sharonmethod);
     } else if (type == 'STRIP'){
-      var stripmethod = new stripStrategy();
+      const stripmethod = new stripStrategy();
       strategy.setStrategy(stripmethod);
     } else {
-      var defaultmethod = new defaultStrategy();
+      const defaultmethod = new defaultStrategy();
       strategy.setStrategy(defaultmethod);
     }
     data = strategy.runningStrategy(steakParameter);
