@@ -37,8 +37,8 @@ router.post('/api/v1/process', async (req, res) => {
     }
     axios({
         method: 'get',
-        url: `http://34.72.100.211/completed`,
-        headers: {'tFactor':tFactor,'mFactor':mFactor,'temperature':data['temperature'],'id':id,'type':type}
+        url: `http://34.66.216.244/completed`,
+        headers: {'thickness':thickness, 'tFactor':tFactor, 'moisture':moisture, 'mFactor':mFactor,'temperature':data['temperature'],'id':id,'type':type}
      }).then(res => {
   
       })

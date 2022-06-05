@@ -10,7 +10,7 @@ const natsMessageHandler = (message) => {
     global.cache.set('FACTOR_THICKNESS', msgObj.factor);
     axios({
         method: 'get',
-        url: `http://34.72.100.211/thickness`,
+        url: `http://34.66.216.244/thickness`,
         headers: {'factor':msgObj.factor}
     }).then(res => {
           //console.log(`statusCode: ${res.status}`);
@@ -24,7 +24,7 @@ const natsMessageHandler = (message) => {
     global.cache.set('FACTOR_MOISTURE', msgObj.factor);
     axios({
         method: 'get',
-        url: `http://34.72.100.211/moisture`,
+        url: `http://34.66.216.244/moisture`,
         headers: {'factor':msgObj.factor}
     }).then(res => {
         // console.log(`statusCode: ${res.status}`);
