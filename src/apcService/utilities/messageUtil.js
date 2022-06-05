@@ -1,14 +1,15 @@
 const logger = require('../../utilities/logger')('APC_SERVICE');
 
 // Prometheus
-const client = require('../../../prom-client');
-const counter = new client.Counter({
-  name: 'metric_name',
-  help: 'metric_help',
+const prom_client_path = '../../../prom-client'
+const client = require(prom_client_path);
+const gauge = new client.Gauge({
+  name: 'factor_gauge',
+  help: 'metrics_help',
+  labelNames: ['thickness', 'moisture']
 });
-counter.inc(); // Increment by 1
-counter.inc(10); // Increment by 10
-
+gauge.set({thickness: '1'}, 1);
+//
 
 const natsMessageHandler = (message) => {
   if (!global.cache) {
@@ -17,12 +18,13 @@ const natsMessageHandler = (message) => {
 
   const msgObj = JSON.parse(message);
   if (msgObj.type === 'FACTOR_THICKNESS') {
-    global.cache.set('FACTOR_THICKNESS', msgObj.factor);
+    gauge.set({thickness: '1'}, msgObj.factor*100);
 
     logger.info(`receive thickness factor: ${msgObj.factor}`);
   } else if (msgObj.type === 'FACTOR_MOISTURE') {
-    global.cache.set('FACTOR_MOISTURE', msgObj.factor);
+    gauge.set({moisture: '2'}, msgObj.factor*100);
 
+    global.cache.set('FACTOR_MOISTURE', msgObj.factor);
     logger.info(`receive moisture factor: ${msgObj.factor}`);
   }
 };

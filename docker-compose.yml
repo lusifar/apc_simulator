@@ -54,8 +54,8 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
-      # Map port 9090 inside the container to port 19090 on the host
-      - 19090:9090
+      # Map port 9090 inside the container to port 19000 on the host
+      - 19000:9090
 
   my-grafana:
     image: grafana/grafana:8.3.6
