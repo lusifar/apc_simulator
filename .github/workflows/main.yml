@@ -1,0 +1,26 @@
+name: CI
+on:
+  pull_request: 
+  push:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: start docker compose
+        run: docker-compose up -d
+      - name: install dependencies
+        run: npm ci
+      - name: run tests
+        run: npm test
+      - name: stop docker compose
+        run: docker-compose down
+      - name: Process jest results with default
+        if: always()
+        uses: im-open/process-jest-test-results@v2.0.5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          results-file: 'result.json'
