@@ -4,7 +4,7 @@
   "description": "the project to simulate the APC scenario",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --json --outputFile=result.json"
   },
   "repository": {
     "type": "git",
