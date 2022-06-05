@@ -1,8 +1,6 @@
 name: CI
 on:
-  push:
-    branches:
-      - nycu-lab-19
+
   pull_request:
 
 
@@ -18,17 +16,3 @@ jobs:
         env:
           Test: true
 
-  push_image:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.CI_REGISTRY_USER }}
-          password: ${{ secrets.CI_REGISTRY_PASSWORD }}
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: ${{ secrets.CI_REGISTRY_USER }}/${{secrets.CI_REGISTRY}}:latest
