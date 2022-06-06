@@ -30,11 +30,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-      env:
-        MONGODB_CONNECTION: ${{ secrets.MONGODB_CONNECTION }}
     - name: Install dependencies
       run: npm install
     - name: Run tests
+      env:
+        MONGODB_CONNECTION: ${{ secrets.MONGODB_CONNECTION }}
       run: npm test
     - name: Stop containers
       if: always()
