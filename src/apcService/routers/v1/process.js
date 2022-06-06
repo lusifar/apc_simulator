@@ -2,6 +2,8 @@ const express = require('express');
 
 const { getData } = require('../../utilities/dataUtil');
 
+const cacheParams =  require('../../../controllers/params');
+
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
 const router = express.Router();
@@ -20,20 +22,18 @@ router.post('/api/v1/process', async (req, res) => {
   let mFactor = null;
 
   try {
-    if (!global.cache) {
-      throw new Error('the global cache is not existed');
-    }
-    tFactor = global.cache.get('FACTOR_THICKNESS');
-    mFactor = global.cache.get('FACTOR_MOISTURE');
+    const params = await cacheParams.get({});
+    tFactor = params.factor_thickness;
+    mFactor = params.factor_moisture;
 
     let data = getData({
-      type, 
+      type,
       thickness,
       moisture,
       tFactor,
       mFactor,
     });
-    
+
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
