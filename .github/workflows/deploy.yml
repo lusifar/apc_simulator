@@ -22,5 +22,5 @@ jobs:
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
       - name: Deploy
         run: |
-          scp -i $SSH_KEY_PATH -r ./infra chris@140.113.67.110:/home/chris/Desktop/
-          ssh -i $SSH_KEY_PATH chris@140.113.67.110 "cd /home/chris/Desktop && kubectl -k ./infra"
+          scp -r -i $SSH_KEY_PATH ./infra chris@140.113.67.110:/home/chris/Desktop/
+          ssh -i $SSH_KEY_PATH chris@140.113.67.110 "cd /home/chris/Desktop && kubectl apply -k ./infra/app && kubectl apply -k ./infra/mongo && kubectl apply -k ./infra/nats"
