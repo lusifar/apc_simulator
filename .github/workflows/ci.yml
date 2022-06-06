@@ -30,10 +30,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+      env:
+        MONGODB_CONNECTION: mongodb://127.0.0.1:27017/params
     - name: Install dependencies
       run: npm install
-    - name: Set environment variables
-      run: cp .env-example .env
     - name: Run tests
       run: npm test
     - name: Stop containers
