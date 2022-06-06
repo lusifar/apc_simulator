@@ -34,11 +34,11 @@ router.post('/process', async (req, res) => {
       mFactor,
     });
 
-    logger.end(handle, { version: 'v1', tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
+    logger.end(handle, { version: 'v1.1', tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
   } catch (err) {
-    logger.fail(handle, { version: 'v1', tFactor, mFactor }, err.message);
+    logger.fail(handle, { version: 'v1.1', tFactor, mFactor }, err.message);
 
     return res.status(500).send({ ok: false, message: err.message });
   }
