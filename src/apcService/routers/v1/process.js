@@ -23,8 +23,8 @@ router.post('/api/v1/process', async (req, res) => {
 
   try {
     const params = await cacheParams.get({});
-    const tFactor = params.factor_thickness;
-    const mFactor = params.factor_moisture;
+    tFactor = params.factor_thickness;
+    mFactor = params.factor_moisture;
 
     let data = getData({
       type,
