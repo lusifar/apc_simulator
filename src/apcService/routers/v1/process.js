@@ -43,7 +43,7 @@ router.post('/api/v1/process', async (req, res) => {
   
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
       });
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
