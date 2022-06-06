@@ -31,7 +31,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
       env:
-        MONGODB_CONNECTION: mongodb://127.0.0.1:27017/params
+        MONGODB_CONNECTION: ${{ secrets.MONGODB_CONNECTION }}
     - name: Install dependencies
       run: npm install
     - name: Run tests
