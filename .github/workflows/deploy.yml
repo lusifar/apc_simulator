@@ -5,6 +5,12 @@ on:
       - nycu-lab-19
 
 
+env:
+  SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+  SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+  SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,11 +22,7 @@ jobs:
           sudo chmod 600 ../private.key
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         shell: bash
-        env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
-          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
       - name: Deploy
         run: |
-          scp -r -i $SSH_KEY_PATH ./infra chris@140.113.67.110:/home/chris/Desktop/
+          scp -i $SSH_KEY_PATH -r ./infra chris@140.113.67.110:/home/chris/Desktop/
           ssh -i $SSH_KEY_PATH chris@140.113.67.110 "cd /home/chris/Desktop && kubectl apply -k ./infra/app && kubectl apply -k ./infra/mongo && kubectl apply -k ./infra/nats"
