@@ -2,8 +2,6 @@ const express = require('express');
 
 const { getData } = require('../../utilities/dataUtil');
 
-const cacheParams =  require('../../../controllers/params');
-
 const logger = require('../../../utilities/logger')('APC_SERVICE');
 
 const router = express.Router();
@@ -22,7 +20,6 @@ router.post('/api/v1/process', async (req, res) => {
   let mFactor = null;
 
   try {
-
     if (!global.cache) {
       throw new Error('the global cache is not existed');
     }

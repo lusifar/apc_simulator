@@ -103,9 +103,5 @@ dist
 # TernJS port file
 .tern-port
 
-
-# Others
-jetstream-cluster/
 mongodb/
-temp.js
-
+jetstream-cluster/
