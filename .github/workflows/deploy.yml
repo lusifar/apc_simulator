@@ -1,0 +1,26 @@
+name: CD
+on:
+  push:
+    branches:
+      - nycu-lab-19
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ../private.key
+          sudo chmod 600 ../private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+          SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+      - name: Deploy
+        run: |
+          scp -i $SSH_KEY_PATH -r ./infra chris@140.113.67.110:/home/chris/Desktop/
+          ssh -i $SSH_KEY_PATH chris@140.113.67.110 "cd /home/chris/Desktop && kubectl -k ./infra"

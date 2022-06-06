@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: apc-simulator
-          image: lusifar/apc-simulator:v2
+          image: bpploabc/apc-simulator:latest
           ports:
             - containerPort: 3030
           env:
