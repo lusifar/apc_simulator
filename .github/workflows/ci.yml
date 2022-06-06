@@ -32,6 +32,8 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm install
+    - name: Set environment variables
+      run: cp .env-example .env
     - name: Run tests
       run: npm test
     - name: Stop containers
