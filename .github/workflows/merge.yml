@@ -54,4 +54,4 @@ jobs:
       - name: Deploy
         run: |
           scp -P $SSH_PORT -i $SSH_KEY_PATH -r ./infra chris@140.113.67.110:/home/chris/Desktop/
-          ssh -i $SSH_KEY_PATH chris@140.113.67.110 "cd /home/chris/Desktop && kubectl apply -k ./infra/app && kubectl apply -k ./infra/mongo && kubectl apply -k ./infra/nats"
+          ssh -i $SSH_KEY_PATH chris@140.113.67.110 -p $SSH_PORT "cd /home/chris/Desktop && kubectl apply -k ./infra/app && kubectl apply -k ./infra/mongo && kubectl apply -k ./infra/nats"
