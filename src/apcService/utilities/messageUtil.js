@@ -17,7 +17,7 @@ const natsMessageHandler = (message) => {
           //console.log(res);
         })
         .catch(error => {
-          console.error(error);
+          // console.error(error);
         });
     logger.info(`receive thickness factor: ${msgObj.factor}`);
   } else if (msgObj.type === 'FACTOR_MOISTURE') {
@@ -31,7 +31,7 @@ const natsMessageHandler = (message) => {
         // console.log(res);
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
       });
     logger.info(`receive moisture factor: ${msgObj.factor}`);
   }
