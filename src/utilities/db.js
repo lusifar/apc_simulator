@@ -5,10 +5,22 @@ const logger = require('./logger')('INDEX');
 
 const init = async () => {
   try {
-    await mongoose.connect(config.mongodb.connection, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    if(process.env.AUTH){
+      await mongoose.connect(config.mongodb.connection, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        authSource: "admin",
+        auth: {
+          username: process.env.db_username,
+          password: process.env.db_password,
+        },
+      });
+    }else{
+      await mongoose.connect(config.mongodb.connection, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+    }
     logger.info('Successfully connect to MongoDB');
   } catch (err) {
     logger.error(err.message);
