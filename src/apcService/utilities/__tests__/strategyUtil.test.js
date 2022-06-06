@@ -1,4 +1,4 @@
-const { sharonStrategy, defaultStrategy } = require('../strategyUtil');
+const { sharonStrategy, defaultStrategy, mixStrategy } = require('../strategyUtil');
 
 describe('Module strategyUtil', () => {
   const fakeThickness = 2.0;
@@ -21,6 +21,15 @@ describe('Module strategyUtil', () => {
     expect(res).toStrictEqual({
       period: (fakeMoisture * fakeMFactor).toFixed(2),
       temperature: 100,
+    });
+  });
+
+  it('Method mixStrategy', () => {
+    const res = mixStrategy(fakeMoisture, fakeMFactor, fakeThickness, fakeTFactor);
+
+    expect(res).toStrictEqual({
+      period: (fakeMoisture * fakeMFactor).toFixed(2),
+      temperature: (fakeThickness * fakeTFactor).toFixed(2),
     });
   });
 });

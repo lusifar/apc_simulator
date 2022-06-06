@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { defaultStrategy, sharonStrategy } = require('../../utilities/strategyUtil');
+const { getData } = require('../../utilities/dataUtil');
 
 const cacheParams =  require('../../../controllers/params');
 
@@ -18,21 +18,25 @@ router.post('/api/v1/process', async (req, res) => {
     moisture,
   });
 
+  let tFactor = null;
+  let mFactor = null;
+
   try {
-    // if (!global.cache) {
-    //   throw new Error('the global cache is not existed');
-    // }
-    const params = await cacheParams.get({});
-    const tFactor = params.factor_thickness;
-    const mFactor = params.factor_moisture;
 
-    let data = null;
-    if (type === 'SHARON') {
-      data = sharonStrategy(thickness, tFactor);
-    } else {
-      data = defaultStrategy(moisture, mFactor);
+    if (!global.cache) {
+      throw new Error('the global cache is not existed');
     }
+    tFactor = global.cache.get('FACTOR_THICKNESS');
+    mFactor = global.cache.get('FACTOR_MOISTURE');
 
+    let data = getData({
+      type, 
+      thickness,
+      moisture,
+      tFactor,
+      mFactor,
+    });
+    
     logger.end(handle, { tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
