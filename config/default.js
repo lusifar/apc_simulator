@@ -3,9 +3,6 @@ module.exports = {
     measurePeriod: 10000,
     paramsPeriod: 15000,
   },
-  mongodb: {
-    connection: 'mongodb://127.0.0.1:27017/params',
-  },
   nats: {
     connection: '127.0.0.1:4222',
     name: 'testbed',

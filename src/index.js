@@ -7,13 +7,10 @@ const NodeCache = require('node-cache');
 
 const logger = require('./utilities/logger')('INDEX');
 const NATSClient = require('./utilities/natsClient');
-const dbClient = require('./utilities/db');
 
 const measureService = require('./measureService');
 const apcService = require('./apcService');
 const paramsService = require('./paramsService');
-const cacheParams = require('./controllers/params');
-const { param } = require('./apcService/routers/v1/process');
 
 let measureHandle = null;
 let paramsHandle = null;
@@ -45,21 +42,15 @@ const initGlobalNATSClient = async () => {
   await global.natsClient.addConsumer(nats.stream, `${nats.subject}.params`, `${nats.consumer}_params`);
 };
 
-// const initGlobalCache = async () => {
-//   global.cache = new NodeCache();
-
-//   global.cache.set('FACTOR_THICKNESS', 0.5);
-//   global.cache.set('FACTOR_MOISTURE', 0.5);
-
-//   const data = await create(0.5, 0.4);
-// };
 const initGlobalCache = async () => {
-  const data = await cacheParams.create(0.5, 0.5);
+  global.cache = new NodeCache();
+
+  global.cache.set('FACTOR_THICKNESS', 0.5);
+  global.cache.set('FACTOR_MOISTURE', 0.5);
 };
 
 const run = async () => {
   // initialize the global resource
-  await dbClient.init();
   await initGlobalNATSClient();
   await initGlobalCache();
 
@@ -72,17 +63,15 @@ const run = async () => {
 run();
 
 process.on('SIGINT', async () => {
-  // Remove all caches from MongoDB
-  if (dbClient.isConnected() == 1) {
-    cacheParams.destroy({});
+  if (global.cache) {
+    await global.cache.close();
+    global.cache = null;
   }
 
   if (global.natsClient) {
     await global.natsClient.disconnect();
     global.natsClient = null;
   }
-
-  await dbClient.deinit();
 
   if (paramsHandle) {
     clearInterval(paramsHandle);
