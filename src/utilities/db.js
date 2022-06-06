@@ -1,4 +1,3 @@
-require('dotenv').config()
 const config = require('config');
 const mongoose = require('mongoose');
 
@@ -6,7 +5,7 @@ const logger = require('./logger')('MongoDB');
 
 const init = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_CONNECTION, {
+    await mongoose.connect(config.mongodb.connection, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
