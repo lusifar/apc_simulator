@@ -1,5 +1,6 @@
 
 const config = require('config');
+require('dotenv').config()
 const mongoose = require('mongoose');
 
 const logger = require('./logger')('MongoDB');
