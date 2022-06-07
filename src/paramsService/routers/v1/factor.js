@@ -1,67 +1,71 @@
 const { nats } = require('config');
-
 const express = require('express');
 
 const logger = require('../../../utilities/logger')('PARAMS_SERVICE');
 
-const router = express.Router();
+const router = (natsClient) => {
+  const router = express.Router();
 
-router.post('/api/v1/factor/thickness', async (req, res) => {
-  const { factor } = req.body;
+  router.post('/api/v1/factor/thickness', async (req, res) => {
+    const { factor } = req.body;
 
-  const handle = logger.begin({ factor });
+    const handle = logger.begin({ factor });
 
-  try {
-    if (!global.natsClient) {
-      throw new Error('the natsClient is not existed');
+    try {
+      if (!natsClient) {
+        throw new Error('the natsClient is not existed');
+      }
+      await natsClient.publish(`${nats.subject}.params`, {
+        type: 'FACTOR_THICKNESS',
+        factor,
+      });
+
+      logger.end(handle, {}, `publish the thickness factor: ${factor}`);
+
+      return res.status(200).send({
+        ok: true,
+      });
+    } catch (err) {
+      logger.fail(handle, {}, err.message);
+
+      return res.status(500).send({
+        ok: false,
+        message: err.message,
+      });
     }
-    await global.natsClient.publish(`${nats.subject}.params`, {
-      type: 'FACTOR_THICKNESS',
-      factor,
-    });
+  });
 
-    logger.end(handle, {}, `publish the thickness factor: ${factor}`);
+  router.post('/api/v1/factor/moisture', async (req, res) => {
+    const { factor } = req.body;
 
-    return res.status(200).send({
-      ok: true,
-    });
-  } catch (err) {
-    logger.fail(handle, {}, err.message);
+    const handle = logger.begin({ factor });
 
-    return res.status(500).send({
-      ok: false,
-      message: err.message,
-    });
-  }
-});
+    try {
+      if (!natsClient) {
+        throw new Error('the natsClient is not existed');
+      }
+      await natsClient.publish(`${nats.subject}.params`, {
+        type: 'FACTOR_MOISTURE',
+        factor,
+      });
 
-router.post('/api/v1/factor/moisture', async (req, res) => {
-  const { factor } = req.body;
+      logger.end(handle), {}, `publish the moisture factor: ${factor}`;
 
-  const handle = logger.begin({ factor });
+      return res.status(200).send({
+        ok: true,
+      });
+    } catch (err) {
+      logger.fail(handle, {}, err.message);
 
-  try {
-    if (!global.natsClient) {
-      throw new Error('the natsClient is not existed');
+      return res.status(500).send({
+        ok: false,
+        message: err.message,
+      });
     }
-    await global.natsClient.publish(`${nats.subject}.params`, {
-      type: 'FACTOR_MOISTURE',
-      factor,
-    });
+  });
 
-    logger.end(handle), {}, `publish the moisture factor: ${factor}`;
+  return router;
+};
 
-    return res.status(200).send({
-      ok: true,
-    });
-  } catch (err) {
-    logger.fail(handle, {}, err.message);
-
-    return res.status(500).send({
-      ok: false,
-      message: err.message,
-    });
-  }
-});
 
 module.exports = router;
