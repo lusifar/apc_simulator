@@ -31,6 +31,6 @@ spec:
                   key: username
             - name: db_password
               valueFrom:
-              secretKeyRef:
-                name: mongo-creds
-                key: password
+                secretKeyRef:
+                  name: mongo-creds
+                  key: password
