@@ -23,7 +23,7 @@ describe('Module messageUtil', () => {
 
   it('Method natsMessageHandler for success', async () => {
     // default
-    await cacheParams.create(0.5,0.5);
+    const data = await cacheParams.create(0.5,0.5);
     
     await natsMessageHandler(
       JSON.stringify({
@@ -32,7 +32,8 @@ describe('Module messageUtil', () => {
       })
     );
 
-    const params = await cacheParams.get({});
+    const params = await cacheParams.get({_id: data._doc._id});
+    await cacheParams.destroy({_id: data._doc._id});
 
     if (fakeType == 'FACTOR_THICKNESS')
       expect(params.factor_thickness).toBe(fakeFactor);

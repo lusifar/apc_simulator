@@ -13,8 +13,7 @@ const create = async (factor_thickness, factor_moisture) => {
       factor_moisture: factor_moisture,
     });
 
-    return { id: data._id, factor_thickness: data.factor_thickness, 
-      factor_moisture: data.factor_moisture };
+    return { ...data };
   } catch (err) {
     logger.error(err.message, { model: 'Params', method: 'create', factor_thickness: factor_thickness, 
         factor_moisture: factor_moisture });
