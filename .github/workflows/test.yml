@@ -33,6 +33,7 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Run tests
+      if: github.ref == 'refs/heads/main'
       env:
         MONGODB_CONNECTION: mongodb://127.0.0.1:27017/params
       run: npm test
