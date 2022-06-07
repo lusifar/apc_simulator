@@ -36,7 +36,7 @@ router.post('/process', async (req, res) => {
 
     logger.end(handle, { version: 'v1', tFactor, mFactor, ...data }, `process (${id}) of APC has completed`);
 
-    return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
+    return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor, version: 'v1' } });
   } catch (err) {
     logger.fail(handle, { version: 'v1', tFactor, mFactor }, err.message);
 

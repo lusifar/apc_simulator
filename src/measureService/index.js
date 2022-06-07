@@ -3,6 +3,8 @@ const { cron, domainService } = require('config');
 const axios = require('axios');
 const uuidv4 = require('uuid').v4;
 
+const logger = require('../utilities/logger')('MEASURE_SERVICE');
+
 const types = ['SHARON', 'RIB_EYE', 'FILET', 'STRIP'];
 
 const run = async () => {
@@ -17,7 +19,16 @@ const run = async () => {
       moisture: 6 + Math.random().toFixed(2),
     };
 
-    const { data } = await axios.post(`${domainService.apc.endpoint}/api/v1/process`, payload);
+		let ep = null;
+    if(process.env.APC_ENDPOINT) {
+      ep = `${process.env.APC_ENDPOINT}/api/process`
+    }
+    else {
+      ep = `${domainService.apc.endpoint}/api/process`
+    }
+
+    const { data } = await axios.post(ep, payload);
+		logger.info('Post to apc complete', {...data})
   }, cron.measurePeriod);
 
   return handler;
