@@ -35,7 +35,6 @@ jobs:
     - name: Run tests
       env:
         MONGODB_CONNECTION: ${{ secrets.MONGODB_CONNECTION }}
-      if: github.ref == 'refs/heads/main'
       run: npm test
     - name: Stop containers
       if: always()
