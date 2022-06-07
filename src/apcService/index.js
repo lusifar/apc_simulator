@@ -14,8 +14,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(cors());
 
-app.use('/api/v1', processRouterV1);
-app.use('/api/v1.1', processRouterV1_1);
+app.use('/api', processRouterV1);
 
 const run = async () => {
   // subscribe the subject
