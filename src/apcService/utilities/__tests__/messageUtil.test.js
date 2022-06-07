@@ -12,6 +12,7 @@ describe('Module messageUtil', () => {
   });
 
   afterEach( async () => {
+    await cacheParams.destroy({});
     await dbClient.deinit();
   });
   //
