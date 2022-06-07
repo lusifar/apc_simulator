@@ -5,9 +5,11 @@ name: APC Simulator CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - '*'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - '*'
 
 jobs:
   build:
@@ -32,9 +34,15 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm install
-    - name: Run tests
+    - name: Run tests (main)
+      if: github.ref == 'refs/heads/main'
       env:
         MONGODB_CONNECTION: ${{ secrets.MONGODB_CONNECTION }}
+      run: npm test
+    - name: Run tests (branch)
+      if: github.ref != 'refs/heads/main'
+      env:
+        MONGODB_CONNECTION: mongodb://127.0.0.1:27017/params
       run: npm test
     - name: Stop containers
       if: always()
