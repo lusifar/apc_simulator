@@ -49,7 +49,7 @@ router.post('/api/v1/factor/moisture', async (req, res) => {
       factor,
     });
 
-    logger.end(handle), {}, `publish the moisture factor: ${factor}`;
+    logger.end(handle, {}, `publish the moisture factor: ${factor}`);
 
     return res.status(200).send({
       ok: true,
