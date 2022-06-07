@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: apc-simulator
-          image: bpploabc/apc-simulator:latest
+          image: yellowhank/apc-simulator:latest
           ports:
             - containerPort: 3030
           env:
