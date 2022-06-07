@@ -1,0 +1,57 @@
+name: Merge
+on:
+  push:
+    branches:
+      - nycu-lab-19
+
+env:
+  SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+  SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+  SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+  SSH_PORT: ${{secrets.SSH_PORT}}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: npm ci
+      - run: npm test
+        env:
+          Test: true
+
+  push_image:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.CI_REGISTRY_USER }}
+          password: ${{ secrets.CI_REGISTRY_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ secrets.CI_REGISTRY_USER }}/${{secrets.CI_REGISTRY}}:latest
+
+  deploy:
+    needs: push_image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create SSH key
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ../private.key
+          sudo chmod 600 ../private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+      - name: Deploy
+        run: |
+          scp -P $SSH_PORT -i $SSH_KEY_PATH -r ./infra chris@140.113.67.110:/home/chris/Desktop/
+          ssh -i $SSH_KEY_PATH chris@140.113.67.110 -p $SSH_PORT "cd /home/chris/Desktop && kubectl apply -k ./infra/app && kubectl apply -k ./infra/mongo && kubectl apply -k ./infra/nats"
