@@ -22,3 +22,15 @@ spec:
               value: '3030'
             - name: NATS_SERVICE_CONNECTION
               value: 'nats-server:4222'
+            - name: AUTH
+              value: 'true'
+            - name: db_username
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-creds
+                  key: username
+            - name: db_password
+              valueFrom:
+              secretKeyRef:
+                name: mongo-creds
+                key: password
