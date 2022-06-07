@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: apc-simulator
-          image: yellowhank/apc-simulator:latest
+          image: yellowhank/apc_simulator:latest
           ports:
             - containerPort: 3030
           env:
@@ -31,6 +31,6 @@ spec:
                   key: username
             - name: db_password
               valueFrom:
-              secretKeyRef:
-                name: mongo-creds
-                key: password
+                secretKeyRef:
+                  name: mongo-creds
+                  key: password
