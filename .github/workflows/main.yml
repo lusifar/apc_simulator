@@ -7,13 +7,11 @@ on:
 
 
 jobs:
-  JS-Unit-Test-Coverage:
-    name: JS-Unit-Test Coverage
-    permissions:
-      checks: write
-      pull-requests: write
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Create Coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: yarn
+    - name: Run tests
+      run: yarn test
