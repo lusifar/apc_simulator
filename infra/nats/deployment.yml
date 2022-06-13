@@ -20,4 +20,4 @@ spec:
           args: ['-js']
           env:
             - name: PORT
-              value: '4222'
+              value: '8080'
